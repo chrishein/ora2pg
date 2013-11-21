@@ -4009,7 +4009,7 @@ sub _howto_get_data
 	# Fix a problem when the table need to be prefixed by the schema
 	my $realtable = $table;
 	if ($self->{schema}) {
-		$realtable = "\U$self->{schema}.$realtable\E";
+		$realtable = "$self->{schema}.\"$realtable\"";
 	}
 	my $alias = 'a';
 	my $str = "SELECT ";
@@ -5636,7 +5636,8 @@ sub read_config
 	$fh->open($file) or $self->logit("FATAL: can't read configuration file $file, $!\n", 0, 1);
 	while (my $l = <$fh>) {
 		chomp($l);
-		$l =~ s///gs;
+		$l =~ s/
+//gs;
 		$l =~ s/^[\s\t]*\#.*$//g;
 		next if (!$l || ($l =~ /^[\s\t]+$/));
 		$l =~ s/^\s*//; $l =~ s/\s*$//;
