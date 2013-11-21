@@ -3240,6 +3240,11 @@ CREATE TRIGGER insert_${table}_trigger
 			$type = "$f->[1], $f->[2]" if (!$type);
 			# Change column names
 			my $fname = $f->[0];
+			
+			if ($fname eq "ID") {
+				$fname = "id";
+			}
+			
 			if (exists $self->{replaced_cols}{"\L$table\E"}{"\L$fname\E"} && $self->{replaced_cols}{"\L$table\E"}{"\L$fname\E"}) {
 				$self->logit("\tReplacing column \L$f->[0]\E as " . $self->{replaced_cols}{"\L$table\E"}{"\L$fname\E"} . "...\n", 1);
 				$fname = $self->{replaced_cols}{"\L$table\E"}{"\L$fname\E"};
@@ -3459,6 +3464,11 @@ sub _dump_table
 			$self->logit("\tReplacing column $f->[0] as " . $self->{replaced_cols}{lc($table)}{lc($f->[0])} . "...\n", 1);
 			$colname = $self->{replaced_cols}{lc($table)}{lc($f->[0])};
 		}
+		
+		if ($colname eq "ID") {
+			$colname = "id";
+		}
+		
 		if (!$self->{preserve_case}) {
 			$colname = $self->quote_reserved_words($colname);
 			$s_out .= "\L$colname\E,";
